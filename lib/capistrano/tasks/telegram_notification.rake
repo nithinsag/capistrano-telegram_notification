@@ -1,9 +1,6 @@
 require 'telegram/bot'
 
 namespace :telegram do
-  start = Time.now
-  elapsed_time = -> { sprintf('%.2f', Time.now - start) }
-
   set :telegram_bot_key, nil
   set :telegram_chat_id, nil
 
@@ -19,27 +16,29 @@ namespace :telegram do
       }
 
   def send_to_telegram(message)
-    Telegram::Bot::Client.run(:telegram_bot_key) do |bot|
-      bot.api.send_message(chat_id: :telegram_chat_id, text: message)
+    puts "sending message"
+    Telegram::Bot::Client.run(fetch(:telegram_bot_key)) do |bot|
+      bot.api.send_message(chat_id: fetch(:telegram_chat_id), text: message)
     end
   end
 
   def telegram_start
-    text = "Started deploying to #{fetch(:telegram_stage)} by @#{fetch(:telegram_deployer)}" +
-           " (branch #{fetch(:branch)})"
+    text = "Started deploying to #{fetch(:telegram_stage)} by #{fetch(:telegram_deployer)}" +
+           " (branch #{fetch(:branch)}) at #{Time.now}"
     send_to_telegram(text)
   end
 
   def telegram_failure
-    text = "Failed deploying to #{fetch(:telegram_stage)} by @#{fetch(:telegram_deployer)}" +
-           " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
+    time = elapsed_time()
+    text = "Failed deploying to #{fetch(:telegram_stage)} by #{fetch(:telegram_deployer)}" +
+           " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{Time.now} )"
     send_to_telegram(text)
   end
 
   def telegram_success
     task = fetch(:deploying) ? 'deployment' : '*rollback*'
     text = "Successful #{task} to #{fetch(:telegram_stage)} by @#{fetch(:telegram_deployer)}" +
-           " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{elapsed_time.call} sec)"
+           " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{Time.now} )"
     send_to_telegram(text)
   end
 
@@ -52,6 +51,15 @@ namespace :telegram do
     desc 'Notify a deploy finish to Telegram'
     task :finish do
       telegram_success
+    end
+
+    desc 'Notify a deploy rollback to Telegram'
+    task :rollback do
+      if (fetch(:deploying))
+        telegram_success
+      else
+        telegram_failure
+      end
     end
   end
 end

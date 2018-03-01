@@ -6,8 +6,8 @@ require 'capistrano/telegram_notification/version'
 Gem::Specification.new do |spec|
   spec.name = "capistrano-telegram_notification"
   spec.version = Capistrano::TelegramNotification::VERSION
-  spec.authors = ["linyows"]
-  spec.email = ["linyows@gmail.com"]
+  spec.authors = ["Nithin Saji"]
+  spec.email = ["nithin111@gmail.com"]
   spec.summary = %q{Notify Capistrano deployment to Telegram.}
   spec.description = %q{Notify Capistrano deployment to Telegram.}
   spec.homepage = "https://github.com/diadara/capistrano-telegram_notification"
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "telegram-bot-ruby", "~> 0"
+  spec.add_dependency "telegram-bot-ruby", "~> 0.8"
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
 end
