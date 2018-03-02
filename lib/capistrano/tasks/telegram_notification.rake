@@ -37,7 +37,7 @@ namespace :telegram do
 
   def telegram_success
     task = fetch(:deploying) ? 'deployment' : '*rollback*'
-    text = "Successful #{task} to #{fetch(:telegram_stage)} by @#{fetch(:telegram_deployer)}" +
+    text = "Successful #{task} to #{fetch(:telegram_stage)} by #{fetch(:telegram_deployer)}" +
            " (branch #{fetch(:branch)} at #{fetch(:current_revision)} / #{Time.now} )"
     send_to_telegram(text)
   end
