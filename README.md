@@ -39,7 +39,7 @@ require 'capistrano/telegram_notification'
 if use webhook
 
 ```ruby
-set :telegram_bot_token, '4223:dfsdaf..'
+set :telegram_bot_key, '4223:dfsdaf..'
 set :telegram_chat_id, '-4234123'
 
 after 'deploy:started', 'telegram:deploy:start'
